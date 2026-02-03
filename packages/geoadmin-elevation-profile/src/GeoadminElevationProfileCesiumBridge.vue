@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+// eslint-disable @typescript-eslint/no-redundant-type-constituents
 import { type SingleCoordinate, WEBMERCATOR, WGS84 } from '@geoadmin/coordinates'
 import {
     CallbackProperty,
