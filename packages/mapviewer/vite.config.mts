@@ -68,13 +68,13 @@ export default defineConfig(({ mode }) => {
             {
                 ...(process.env.USE_HTTPS
                     ? basicSsl({
-                          /** Name of certification */
-                          name: 'localhost',
-                          /** Custom trust domains */
-                          domains: ['localhost', '192.168.*.*'],
-                          /** Custom certification directory */
-                          certDir: './devServer/cert',
-                      })
+                        /** Name of certification */
+                        name: 'localhost',
+                        /** Custom trust domains */
+                        domains: ['localhost', '192.168.*.*'],
+                        /** Custom certification directory */
+                        certDir: './devServer/cert',
+                    })
                     : {}),
                 apply: 'serve',
             },
@@ -114,49 +114,49 @@ export default defineConfig(({ mode }) => {
             mode === 'test'
                 ? {}
                 : VitePWA({
-                      devOptions: {
-                          enabled: true,
-                          type: 'module',
-                      },
+                    devOptions: {
+                        enabled: true,
+                        type: 'module',
+                    },
 
-                      strategies: 'injectManifest',
-                      srcDir: 'src',
-                      filename: 'service-workers.ts',
-                      registerType: 'autoUpdate',
-                      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'icon.svg'],
-                      injectRegister: false,
-                      injectManifest: {
-                          // 5MB max (default is 2MB, some of our chunks and Cesium files are larger than that)
-                          maximumFileSizeToCacheInBytes: 5 * 1000 * 1000,
-                      },
+                    strategies: 'injectManifest',
+                    srcDir: 'src',
+                    filename: 'service-workers.ts',
+                    registerType: 'autoUpdate',
+                    includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'icon.svg'],
+                    injectRegister: false,
+                    injectManifest: {
+                        // 5MB max (default is 2MB, some of our chunks and Cesium files are larger than that)
+                        maximumFileSizeToCacheInBytes: 5 * 1000 * 1000,
+                    },
 
-                      pwaAssets: {
-                          disabled: false,
-                          config: true,
-                      },
+                    pwaAssets: {
+                        disabled: false,
+                        config: true,
+                    },
 
-                      manifest: {
-                          name: 'map.geo.admin.ch',
-                          short_name: 'geoadmin',
-                          description:
-                              'Maps of Switzerland - Swiss Confederation - map.geo.admin.ch',
-                          theme_color: '#ffffff',
-                          icons: [
-                              { src: '/icon-192.png', type: 'image/png', sizes: '192x192' },
-                              { src: '/icon-512.png', type: 'image/png', sizes: '512x512' },
-                          ],
-                          related_applications: [
-                              {
-                                  platform: 'play',
-                                  url: 'https://play.google.com/store/apps/details?id=ch.admin.swisstopo',
-                              },
-                              {
-                                  platform: 'itunes',
-                                  url: 'https://apps.apple.com/us/app/swisstopo/id1505986543',
-                              },
-                          ],
-                      },
-                  }),
+                    manifest: {
+                        name: 'map.geo.admin.ch',
+                        short_name: 'geoadmin',
+                        description:
+                            'Maps of Switzerland - Swiss Confederation - map.geo.admin.ch',
+                        theme_color: '#ffffff',
+                        icons: [
+                            { src: '/icon-192.png', type: 'image/png', sizes: '192x192' },
+                            { src: '/icon-512.png', type: 'image/png', sizes: '512x512' },
+                        ],
+                        related_applications: [
+                            {
+                                platform: 'play',
+                                url: 'https://play.google.com/store/apps/details?id=ch.admin.swisstopo',
+                            },
+                            {
+                                platform: 'itunes',
+                                url: 'https://apps.apple.com/us/app/swisstopo/id1505986543',
+                            },
+                        ],
+                    },
+                }),
             mode === 'development' ? vueDevTools() : {},
         ],
         resolve: {
@@ -164,6 +164,7 @@ export default defineConfig(({ mode }) => {
                 '@': fileURLToPath(new URL('./src', import.meta.url)),
                 tests: fileURLToPath(new URL('./tests', import.meta.url)),
                 cesium: normalizePath(cesiumFolder),
+                '@zip.js/zip.js/lib/zip-no-worker.js': '@zip.js/zip.js/lib/zip.js',
             },
         },
         // see https://vite.dev/config/#using-environment-variables-in-config

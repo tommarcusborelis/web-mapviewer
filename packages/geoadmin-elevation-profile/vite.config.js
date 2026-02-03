@@ -25,6 +25,7 @@ export default {
     resolve: {
         alias: {
             '@': fileURLToPath(new URL('./src', import.meta.url)),
+            '@zip.js/zip.js/lib/zip-no-worker.js': '@zip.js/zip.js/lib/zip.js',
         },
     },
     plugins: [
