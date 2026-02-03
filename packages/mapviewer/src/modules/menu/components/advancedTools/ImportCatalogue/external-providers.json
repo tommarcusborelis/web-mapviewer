@@ -1,4 +1,5 @@
 [
+    "http://localhost:8000/api/stac/v1",
     "https://bio.discomap.eea.europa.eu/arcgis/services/Ecosystem/Ecosystems/MapServer/WMSServer",
     "https://copernicus.discomap.eea.europa.eu/arcgis/services/Corine/CLC2012_WM/MapServer/WMSServer",
     "https://geo.so.ch/api/wms",

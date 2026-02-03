@@ -21,6 +21,19 @@ export function isWmtsGetCap(fileContent) {
 }
 
 /**
+ * Checks if file has STAC Capabilities content
+ *
+ * @param {Object|string} fileContent
+ * @returns {boolean}
+ */
+export function isStacGetCap(fileContent) {
+    if (typeof fileContent === 'object') {
+        return !!fileContent?.stac_version || !!fileContent?.collections
+    }
+    return false
+}
+
+/**
  * Checks if the URL is a WMS url
  *
  * @param {string} url
@@ -41,6 +54,16 @@ export function isWmtsUrl(url) {
 }
 
 /**
+ * Checks if the URL is a STAC url
+ *
+ * @param {string} url
+ * @returns {boolean}
+ */
+export function isStacUrl(url) {
+    return /stac/i.test(url)
+}
+
+/**
  * Guess the provider URL type and return URL with correct parameters if needed
  *
  * @param {string} provider Base url of the provider
@@ -48,6 +71,9 @@ export function isWmtsUrl(url) {
  * @returns {URL} Url object with backend parameters (eg. SERVICE=WMS, ...)
  */
 export function guessExternalLayerUrl(provider, language) {
+    if (isStacUrl(provider)) {
+        return new URL(provider)
+    }
     if (isWmtsUrl(provider)) {
         return setWmtsGetCapParams(new URL(provider), language)
     }

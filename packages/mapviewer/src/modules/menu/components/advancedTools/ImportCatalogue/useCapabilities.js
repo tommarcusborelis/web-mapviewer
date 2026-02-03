@@ -11,9 +11,11 @@ import {
 } from '@/api/layers/layers-external.api'
 import {
     guessExternalLayerUrl,
+    isStacGetCap,
     isWmsGetCap,
     isWmtsGetCap,
 } from '@/modules/menu/components/advancedTools/ImportCatalogue/utils'
+import STACCapabilitiesParser from '@/api/layers/STACCapabilitiesParser.class'
 
 export function useCapabilities(newUrl) {
     const url = ref(newUrl)
@@ -22,11 +24,13 @@ export function useCapabilities(newUrl) {
     const projection = computed(() => store.state.position.projection)
     const lang = computed(() => store.state.i18n.lang)
 
-    function handleFileContent(content, fullUrl, contentType) {
+    async function handleFileContent(content, fullUrl, contentType) {
         if (isWmsGetCap(content)) {
             return handleWms(content, fullUrl)
         } else if (isWmtsGetCap(content)) {
             return handleWmts(content, fullUrl)
+        } else if (isStacGetCap(content)) {
+            return await handleStac(content, fullUrl)
         } else {
             throw new CapabilitiesError(
                 `Unsupported url ${fullUrl} response content; Content-Type=${contentType}`,
@@ -60,6 +64,13 @@ export function useCapabilities(newUrl) {
         }
     }
 
+    async function handleStac(content, fullUrl) {
+        const parser = new STACCapabilitiesParser(fullUrl)
+        return {
+            layers: await parser.getAllExternalLayerObjects(projection.value),
+        }
+    }
+
     async function loadCapabilities() {
         const fullUrl = guessExternalLayerUrl(url.value, lang.value).toString()
         try {
@@ -70,7 +81,7 @@ export function useCapabilities(newUrl) {
                     'network_error'
                 )
             }
-            const props = handleFileContent(
+            const props = await handleFileContent(
                 response.data,
                 fullUrl,
                 response.headers.get('Content-Type')
