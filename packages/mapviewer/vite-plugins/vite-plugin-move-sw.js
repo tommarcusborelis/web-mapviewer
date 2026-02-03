@@ -8,7 +8,7 @@
  * 4. Updates source map references in the moved JS file
  * 5. Warns if the expected files are not found
  */
-export default function moveServiceWorkerFile(appVersion, staging) {
+export default function moveServiceWorkerFile(appVersion, _staging) {
     let outputDir = ''
 
     return {
@@ -18,8 +18,6 @@ export default function moveServiceWorkerFile(appVersion, staging) {
             async handler() {
                 const fs = await import('fs/promises')
                 const path = await import('path')
-
-                console.log('[vite-plugin-move-sw] Moving service worker to versioned directory...')
 
                 const swFileName = 'service-workers.js'
                 const swMapFileName = 'service-workers.js.map'
@@ -39,7 +37,6 @@ export default function moveServiceWorkerFile(appVersion, staging) {
 
                     // Move the service worker file
                     await fs.rename(oldSwPath, newSwPath)
-                    console.log(`[vite-plugin-move-sw] Moved ${swFileName} to ${appVersion}/`)
 
                     // Handle source map if it exists
                     try {
@@ -47,9 +44,6 @@ export default function moveServiceWorkerFile(appVersion, staging) {
 
                         // Move the source map file
                         await fs.rename(oldSwMapPath, newSwMapPath)
-                        console.log(
-                            `[vite-plugin-move-sw] Moved ${swMapFileName} to ${appVersion}/`
-                        )
 
                         // Update source map reference in the JS file
                         const swContent = await fs.readFile(newSwPath, 'utf-8')
@@ -59,13 +53,9 @@ export default function moveServiceWorkerFile(appVersion, staging) {
                         )
 
                         await fs.writeFile(newSwPath, updatedContent, 'utf-8')
-                        console.log('[vite-plugin-move-sw] Updated source map reference')
-                    } catch (mapError) {
+                    } catch (_mapError) {
                         // Source map doesn't exist, which is fine
-                        console.log('[vite-plugin-move-sw] No source map found (this is OK)')
                     }
-
-                    console.log('[vite-plugin-move-sw] Service worker relocation complete')
                 } catch (error) {
                     this.warn(
                         `[vite-plugin-move-sw] WARNING: Failed to move service worker file: ${error.message}. ` +

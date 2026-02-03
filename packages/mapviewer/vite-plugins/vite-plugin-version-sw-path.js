@@ -21,8 +21,6 @@ export default function versionServiceWorkerPath(appVersion, staging) {
         },
 
         generateBundle(options, bundle) {
-            console.log('[vite-plugin-version-sw-path] Scanning bundles for SW registration...')
-
             for (const fileName in bundle) {
                 const chunk = bundle[fileName]
 
@@ -32,9 +30,7 @@ export default function versionServiceWorkerPath(appVersion, staging) {
                     const workboxPattern = /new\s+(\w+)\("\.\/service-workers\.js"/g
 
                     if (workboxPattern.test(chunk.code)) {
-                        console.log(
-                            `[vite-plugin-version-sw-path] Found SW registration in ${fileName}`
-                        )
+
                         swPatternFound = true
 
                         // Replace the SW path with versioned path
@@ -64,9 +60,6 @@ export default function versionServiceWorkerPath(appVersion, staging) {
                     // Pattern 3: Look for standalone string references to the SW path
                     // (in case registration uses a different pattern)
                     if (chunk.code.includes('"./service-workers.js"')) {
-                        console.log(
-                            `[vite-plugin-version-sw-path] Found SW path reference in ${fileName}`
-                        )
                         swPatternFound = true
 
                         chunk.code = chunk.code.replace(
@@ -110,12 +103,8 @@ export default function versionServiceWorkerPath(appVersion, staging) {
                     'utf-8'
                 )
 
-                console.log(
-                    `[vite-plugin-version-sw-path] Validation file written: ${validationFilePath}`
-                )
-
                 if (!swPatternFound) {
-                    console.error(
+                    this.error(
                         '[vite-plugin-version-sw-path] ERROR: SW versioning validation FAILED'
                     )
                 }

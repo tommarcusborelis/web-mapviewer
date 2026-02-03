@@ -134,7 +134,7 @@ const { offlineReady, needRefresh, updateServiceWorker } = useRegisterSW({
 
 onMounted(() => {
     // Check SW validation status on component mount
-    checkSwValidation()
+    void checkSwValidation()
 })
 
 const statusIcon = computed<string>(() => {
